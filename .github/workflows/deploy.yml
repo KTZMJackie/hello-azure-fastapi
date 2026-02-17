@@ -1,4 +1,5 @@
 name: Deploy to Azure Container Apps
+
 on:
   push:
     branches: [ "main" ]
@@ -8,12 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Azure Login (OIDC)
+      - name: Azure Login
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -21,13 +21,16 @@ jobs:
       - name: ACR Login
         run: az acr login -n ${{ secrets.ACR_NAME }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build & Push Image
         run: |
           IMAGE=${{ secrets.ACR_NAME }}.azurecr.io/hello-azure-fastapi:${{ github.sha }}
           docker buildx build --platform linux/amd64 \
-          -t $IMAGE \
-          -f app/Dockerfile . \
-          --push
+            -t $IMAGE \
+            -f app/Dockerfile . \
+            --push
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
       - name: Deploy Container App
@@ -36,7 +39,4 @@ jobs:
           az containerapp update \
             --name ${{ secrets.CONTAINERAPP_NAME }} \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --location southeastasia \
-            --image ${{ env.IMAGE }} \
-            --target-port 8000 \
-            --ingress external
+            --image ${{ env.IMAGE }}
