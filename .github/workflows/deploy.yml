@@ -1,0 +1,42 @@
+name: Deploy to Azure Container Apps
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ACR Login
+        run: az acr login -n ${{ secrets.ACR_NAME }}
+
+      - name: Build & Push Image
+        run: |
+          IMAGE=${{ secrets.ACR_NAME }}.azurecr.io/hello-fastapi:${{ github.sha }}
+          docker build -t $IMAGE ./app
+          docker push $IMAGE
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Deploy Container App
+        run: |
+          az extension add --name containerapp --upgrade
+          az containerapp up \
+            --name ${{ secrets.CONTAINERAPP_NAME }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --location southeastasia \
+            --image ${{ env.IMAGE }} \
+            --target-port 8000 \
+            --ingress externa
