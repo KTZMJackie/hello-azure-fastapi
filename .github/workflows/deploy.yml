@@ -1,42 +1,44 @@
-name: Deploy to Azure Container Apps
+name: Deploy FastAPI to Azure Container Apps
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+
+env:
+  ACR_NAME: <your-acr-name>
+  IMAGE_NAME: fastapi-hello
+  CONTAINER_APP: aca-hello-fastapi
+  RESOURCE_GROUP: <your-resource-group>
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Azure Login
-        uses: azure/login@v2
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: ACR Login
-        run: az acr login -n ${{ secrets.ACR_NAME }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build & Push Image
+      - name: Build Docker image
         run: |
-          IMAGE=${{ secrets.ACR_NAME }}.azurecr.io/hello-azure-fastapi:${{ github.sha }}
-          docker buildx build --platform linux/amd64 \
-            -t $IMAGE \
-            -f app/Dockerfile . \
-            --push
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }} .
+
+      - name: Login to ACR
+        run: |
+          az acr login --name $ACR_NAME
+
+      - name: Push image
+        run: |
+          docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
 
       - name: Deploy Container App
         run: |
-          az extension add --name containerapp --upgrade
           az containerapp update \
-            --name ${{ secrets.CONTAINERAPP_NAME }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --image ${{ env.IMAGE }}
+            --name $CONTAINER_APP \
+            --resource-group $RESOURCE_GROUP \
+            --image $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
