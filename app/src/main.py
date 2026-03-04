@@ -11,6 +11,10 @@ app = FastAPI()
 CONTAINER_NAME = "appdata"
 SECRET_NAME = "storage-account-name"
 
+@app.get("/")
+def root():
+    return {"status": "ok", "message": "Hello from FastAPI on Azure Container Apps"}
+
 @app.get("/health")
 def health():
     return {"status": "healthy"}
