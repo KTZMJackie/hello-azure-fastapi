@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  ACR_NAME: <your-acr-name>
+  ACR_NAME: acrhelloktzmjackie
   IMAGE_NAME: fastapi-hello
   CONTAINER_APP: aca-hello-fastapi
   RESOURCE_GROUP: <your-resource-group>
