@@ -19,6 +19,16 @@ def root():
 def health():
     return {"status": "healthy"}
 
+@app.get("/secret")
+def secret():
+    kv_name = os.environ["KEY_VAULT_NAME"]
+    secret_name = os.environ.get("KEY_VAULT_SECRET_NAME", "HELLO_SECRET")
+    kv_url = f"https://{kv_name}.vault.azure.net/"
+
+    client = SecretClient(vault_url=kv_url, credential=DefaultAzureCredential())
+    s = client.get_secret(secret_name)
+    return {"secret_name": secret_name, "secret_value": s.value}
+
 def _get_blob_service_client():
     key_vault_name = os.getenv("KEY_VAULT_NAME")
     if not key_vault_name:
