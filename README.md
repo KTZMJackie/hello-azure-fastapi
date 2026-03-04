@@ -9,6 +9,8 @@ Swagger Docs : https://aca-hello-fastapi.politesand-7d1fea26.southeastasia.azure
 
 Health Check : https://aca-hello-fastapi.politesand-7d1fea26.southeastasia.azurecontainerapps.io/health
 
+Secret : Health Check : https://aca-hello-fastapi.politesand-7d1fea26.southeastasia.azurecontainerapps.io/secret
+
 # ARCHITECTURE OVERVIEW
 FastAPI runs in Azure Container Apps and retrieves secrets securely from Azure Key Vault using Managed Identity. 
 CI/CD is handled through GitHub Actions which builds and deploys the Docker container automatically.
@@ -95,7 +97,7 @@ The following table summarizes the key engineering challenges and how they were 
 <img width="378" height="298" alt="Screenshot 2026-02-17 at 4 39 08 PM" src="https://github.com/user-attachments/assets/a56ccb30-72b1-4a6f-a0ed-3eed8ad5e78c" />
 
 # GITHUB DEPLOYMENT SUCCESS
-<img width="1410" height="477" alt="Screenshot 2026-02-17 at 4 00 24 PM" src="https://github.com/user-attachments/assets/f70392bf-6783-4e8c-9ffa-f79c6b8c74d8" />
+<img width="1112" height="638" alt="Screenshot 2026-03-04 at 6 25 54 PM" src="https://github.com/user-attachments/assets/0d538552-3ce0-4a05-91cb-a02425a75d4f" />
 
 # Azure Container App Oveview
 <img width="1419" height="408" alt="Screenshot 2026-02-17 at 3 59 15 PM" src="https://github.com/user-attachments/assets/01674068-7ac7-4299-98b7-fcf00d3446a0" />
