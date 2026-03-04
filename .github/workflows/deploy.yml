@@ -9,7 +9,7 @@ env:
   ACR_NAME: acrhelloktzmjackie
   IMAGE_NAME: fastapi-hello
   CONTAINER_APP: aca-hello-fastapi
-  RESOURCE_GROUP: rg-hello-fastapi
+  RESOURCE_GROUP: rg-hello-aca-sg
 
 jobs:
   build-and-deploy:
