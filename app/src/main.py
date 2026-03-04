@@ -27,7 +27,7 @@ def secret():
 
     client = SecretClient(vault_url=kv_url, credential=DefaultAzureCredential())
     s = client.get_secret(secret_name)
-    return {"secret_name": secret_name, "secret_value": s.value}
+    return {"secret_name": secret_name, "retrieved": True}
 
 def _get_blob_service_client():
     key_vault_name = os.getenv("KEY_VAULT_NAME")
