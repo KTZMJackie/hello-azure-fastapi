@@ -3,6 +3,8 @@ A production-style cloud microservice built with FastAPI, Docker and Azure Conta
 The service retrieves secrets securely from Azure Key Vault using Managed Identity and is automatically deployed via GitHub Actions CI/CD.
 
 # LIVE DEMO
+Note: Infrastructure has been torn down to avoid ongoing Azure costs.
+
 API : https://aca-hello-fastapi.politesand-7d1fea26.southeastasia.azurecontainerapps.io
 
 Swagger Docs : https://aca-hello-fastapi.politesand-7d1fea26.southeastasia.azurecontainerapps.io/docs
@@ -86,12 +88,6 @@ The following table summarizes the key engineering challenges and how they were 
 | Container App deployment failed in CI/CD | Corrected resource group and container app name in deployment configuration |
 | Key Vault secret retrieval failed due to invalid name | Renamed secret to follow Azure Key Vault naming rules |
 | Secure secret management without credentials | Implemented Azure Managed Identity for Container App to access Key Vault |
-
-## Future Improvements
-- Add Terraform for infrastructure as code
-- Implement Azure Monitor / Log Analytics
-- Add rate limiting and authentication
-- Add unit and integration tests
 
 # PROJECT STRUCTURE
 <img width="378" height="298" alt="Screenshot 2026-02-17 at 4 39 08 PM" src="https://github.com/user-attachments/assets/a56ccb30-72b1-4a6f-a0ed-3eed8ad5e78c" />
